@@ -24,12 +24,22 @@ public class BookController implements BookControllerSpec {
 
     @Override
     public ResponseEntity<Book> addBook(BookDetails bookDetails) {
-        log.info("Request to add a book to the library with name '{}'", bookDetails.getName());
+        log.info("Request to add a book to the library with details '{}'", bookDetails);
 
-        Book book = bookService.addBook(bookDetails.getName(), bookDetails.getAuthor(), bookDetails.getReleaseDate());
-        log.info("Successfully added a book to the library with name '{}'", book.getName());
+        Book book = bookService.addBook(bookDetails);
+        log.info("Successfully added a book to the library with details '{}'", bookDetails);
 
         return ResponseEntity.ok(book);
+    }
+
+    @Override
+    public ResponseEntity<Book> editBook(Book updatedBook) {
+        log.info("Request to add a book to the library with details '{}'", updatedBook);
+
+        Book editedBook = bookService.editBook(updatedBook);
+        log.info("Successfully added a book to the library with name '{}'", editedBook);
+
+        return ResponseEntity.ok(editedBook);
     }
 
     @Override

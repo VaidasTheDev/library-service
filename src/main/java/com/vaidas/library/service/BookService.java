@@ -21,8 +21,12 @@ public class BookService {
 
     private final BookRepository bookRepository;
 
-    public Book addBook(String name, String author, Date releaseDate) {
-        log.info("Attempt to add a new book '{}'", name);
+    public Book addBook(BookDetails bookDetails) {
+        log.info("Attempt to add a new book '{}'", bookDetails);
+
+        String name = bookDetails.getName();
+        String author = bookDetails.getAuthor();
+        Date releaseDate = bookDetails.getReleaseDate();
 
         Optional<Book> bookOptional = bookRepository.findBookByNameAndAuthorAndReleaseDate(name, author, releaseDate);
         if (bookOptional.isPresent()) {
@@ -35,6 +39,35 @@ public class BookService {
 
         log.info("Successfully added a new book with name '{}', author '{}' and release date '{}'", name, author, releaseDate);
         return book;
+    }
+
+    public Book editBook(Book updatedBook) {
+        log.info("Attempt to edit book with id '{}'", updatedBook.getId());
+
+        Optional<Book> optionalBook = bookRepository.findById(updatedBook.getId());
+        if (optionalBook.isEmpty()) {
+            throw new RuntimeException("Book with id '" + updatedBook.getId() + "' does not exist");
+        }
+
+        Book persistedBook = optionalBook.get();
+
+        // Only update fields with values
+        if (updatedBook.getName() != null) {
+            persistedBook.setName(updatedBook.getName());
+        }
+        if (updatedBook.getAuthor() != null) {
+            persistedBook.setAuthor(updatedBook.getAuthor());
+        }
+        if (updatedBook.getReleaseDate() != null) {
+            persistedBook.setReleaseDate(updatedBook.getReleaseDate());
+        }
+        if (updatedBook.getStatus() != null) {
+            persistedBook.setStatus(updatedBook.getStatus());
+        }
+
+        persistedBook = bookRepository.save(persistedBook);
+        log.info("Successfully edited book with id '{}'", persistedBook.getId());
+        return persistedBook;
     }
 
     public List<Book> getBooks(BookDetails bookDetails) {
