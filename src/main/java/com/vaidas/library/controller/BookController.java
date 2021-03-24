@@ -6,12 +6,17 @@ import com.vaidas.library.service.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
+import java.util.List;
 
 @Log4j2
 @RequiredArgsConstructor
 @RestController
+@Validated
 @RequestMapping("book")
 public class BookController implements BookControllerSpec {
 
@@ -25,5 +30,16 @@ public class BookController implements BookControllerSpec {
         log.info("Successfully added a book to the library with name '{}'", book.getName());
 
         return ResponseEntity.ok(book);
+    }
+
+    @Override
+    public ResponseEntity<List<Book>> getBooks(String name, String author, Date releaseDate) {
+        BookDetails bookDetails = new BookDetails(name, author, releaseDate);
+        log.info("Request to retrieve books with details: {}", bookDetails);
+
+        List<Book> books = bookService.getBooks(bookDetails);
+        log.info("Successfully retrieved books with details: {}", bookDetails);
+
+        return ResponseEntity.ok(books);
     }
 }
