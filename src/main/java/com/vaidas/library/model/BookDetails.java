@@ -6,9 +6,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -19,11 +19,11 @@ import java.util.Date;
 public class BookDetails implements Serializable {
 
     @NotEmpty(message = BookValidationMessages.NAME_EMPTY)
-    @Min(value = 2, message = BookValidationMessages.NAME_TOO_SHORT)
+    @Size(min = 2, message = BookValidationMessages.NAME_TOO_SHORT)
     private String name;
 
     @NotEmpty(message = BookValidationMessages.AUTHOR_EMPTY)
-    @Min(value = 1, message = BookValidationMessages.AUTHOR_TOO_SHORT)
+    @Size(min = 1, message = BookValidationMessages.AUTHOR_TOO_SHORT)
     private String author;
 
     @NotNull(message = BookValidationMessages.RELEASE_DATE_NULL)
