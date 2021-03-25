@@ -13,7 +13,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Validated
