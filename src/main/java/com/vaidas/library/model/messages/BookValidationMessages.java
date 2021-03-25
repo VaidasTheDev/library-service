@@ -1,4 +1,4 @@
-package com.vaidas.library.model;
+package com.vaidas.library.model.messages;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

@@ -3,7 +3,7 @@ package com.vaidas.library.controller;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.vaidas.library.model.Book;
 import com.vaidas.library.model.BookDetails;
-import com.vaidas.library.model.BookValidationMessages;
+import com.vaidas.library.model.messages.BookValidationMessages;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

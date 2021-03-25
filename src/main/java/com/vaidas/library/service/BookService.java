@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.vaidas.library.model.messages.BookServiceErrorMessages.ERROR_DUPLICATE_BOOK;
+import static com.vaidas.library.model.messages.BookServiceErrorMessages.ERROR_NOT_FOUND;
+
 @Log4j2
 @Service
 @RequiredArgsConstructor
@@ -31,7 +34,7 @@ public class BookService {
         Optional<Book> bookOptional = bookRepository.findBookByNameAndAuthorAndReleaseDate(name, author, releaseDate);
         if (bookOptional.isPresent()) {
             log.error("A book with name '{}', author '{}' and release date '{}' already exists", name, author, releaseDate);
-            throw new RuntimeException("Book already exists");
+            throw new RuntimeException(ERROR_DUPLICATE_BOOK);
         }
 
         Book book = new Book(UUID.randomUUID(), name, author, releaseDate, BookStatus.AVAILABLE);
@@ -46,7 +49,7 @@ public class BookService {
 
         Optional<Book> optionalBook = bookRepository.findById(updatedBook.getId());
         if (optionalBook.isEmpty()) {
-            throw new RuntimeException("Book with id '" + updatedBook.getId() + "' does not exist");
+            throw new RuntimeException(ERROR_NOT_FOUND);
         }
 
         Book persistedBook = optionalBook.get();
@@ -67,6 +70,7 @@ public class BookService {
 
         persistedBook = bookRepository.save(persistedBook);
         log.info("Successfully edited book with id '{}'", persistedBook.getId());
+
         return persistedBook;
     }
 

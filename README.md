@@ -12,3 +12,6 @@ A simple service for managing books in a library. Books may be added, removed or
 - Testing: add integration tests using Gherkin
 - Validation: incoming data should have custom validation instead of 'javax';
   Although 'javax.validation' module does the job, it's difficult to apply complex validation rules
+
+# To-do
+- Unit tests

@@ -1,6 +1,7 @@
 package com.vaidas.library.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.vaidas.library.model.messages.BookValidationMessages;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
