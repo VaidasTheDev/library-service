@@ -5,6 +5,7 @@ import com.vaidas.library.model.BookDetails;
 import com.vaidas.library.service.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +30,7 @@ public class BookController implements BookControllerSpec {
         Book book = bookService.addBook(bookDetails);
         log.info("Successfully added a book to the library with details '{}'", bookDetails);
 
-        return ResponseEntity.ok(book);
+        return ResponseEntity.status(HttpStatus.CREATED).body(book);
     }
 
     @Override
