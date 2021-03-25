@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
+
+import static com.vaidas.library.model.GlobalConstants.DEFAULT_DATE_FORMAT;
 
 @Entity
 @Getter
@@ -28,8 +30,8 @@ public class Book {
     private String author;
 
     @Column(nullable = false, name = "release_date")
-    @JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
-    private Date releaseDate;
+    @JsonFormat(pattern = DEFAULT_DATE_FORMAT, shape = JsonFormat.Shape.STRING)
+    private LocalDate releaseDate;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)

@@ -74,6 +74,13 @@
 			<version>6.10.2</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+
+		<!-- TODO: dependency management -->
+
 	</dependencies>
 
 	<build>

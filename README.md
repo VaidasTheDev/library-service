@@ -19,5 +19,4 @@ You must set the profile to `prod` for running the application.
   Although 'javax.validation' module does the job, it's difficult to apply complex validation rules
 
 # Major faults
-- DB is a file which is shared between integration tests and 
-- DB (file) needs to be refreshed after every integration test run
+- DB is a file which is shared between integration tests and

@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,8 +33,8 @@ public class BookServiceTest {
     private final static String SAMPLE_BOOK_NAME_2 = "Another Book";
     private final static String SAMPLE_AUTHOR = "Sample Author";
     private final static String SAMPLE_AUTHOR_2 = "Another Author";
-    private final static Date SAMPLE_RELEASE_DATE = new Date();
-    private final static Date SAMPLE_RELEASE_DATE_2 = new Date(System.currentTimeMillis() - 60000 * 60 * 24);
+    private final static LocalDate SAMPLE_RELEASE_DATE = LocalDate.now();
+    private final static LocalDate SAMPLE_RELEASE_DATE_2 = LocalDate.now().minusDays(1);
 
     @Test
     public void shouldAddBook() {
@@ -137,7 +138,7 @@ public class BookServiceTest {
         verify(bookRepository, times(1)).save(eq(mockUpdatedBook));
     }
 
-    private Book buildMockBook(String name, String author, Date releaseDate) {
+    private Book buildMockBook(String name, String author, LocalDate releaseDate) {
         return buildMockBook(
                 UUID.randomUUID(),
                 name,
@@ -147,7 +148,7 @@ public class BookServiceTest {
         );
     }
 
-    private Book buildMockBook(UUID id, String name, String author, Date releaseDate, BookStatus bookStatus) {
+    private Book buildMockBook(UUID id, String name, String author, LocalDate releaseDate, BookStatus bookStatus) {
         return new Book(
                 id,
                 name,

@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class BookController implements BookControllerSpec {
     }
 
     @Override
-    public ResponseEntity<List<Book>> getBooks(String name, String author, Date releaseDate) {
+    public ResponseEntity<List<Book>> getBooks(String name, String author, LocalDate releaseDate) {
         BookDetails bookDetails = new BookDetails(name, author, releaseDate);
         log.info("Request to retrieve books with details: {}", bookDetails);
 

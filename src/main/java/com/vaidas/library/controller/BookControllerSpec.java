@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Null;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -42,6 +43,6 @@ public interface BookControllerSpec {
                     String author,
             @RequestParam(required = false)
             @JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
-                    Date releaseDate
+                    LocalDate releaseDate
     );
 }

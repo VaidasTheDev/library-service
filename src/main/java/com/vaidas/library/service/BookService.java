@@ -9,7 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,7 +29,7 @@ public class BookService {
 
         String name = bookDetails.getName();
         String author = bookDetails.getAuthor();
-        Date releaseDate = bookDetails.getReleaseDate();
+        LocalDate releaseDate = bookDetails.getReleaseDate();
 
         Optional<Book> bookOptional = bookRepository.findBookByNameAndAuthorAndReleaseDate(name, author, releaseDate);
         if (bookOptional.isPresent()) {
