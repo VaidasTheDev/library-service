@@ -9,9 +9,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Example;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -136,6 +138,26 @@ public class BookServiceTest {
         assertEquals(mockUpdatedBook, book);
         verify(bookRepository, times(1)).findById(mockUpdatedBook.getId());
         verify(bookRepository, times(1)).save(eq(mockUpdatedBook));
+    }
+
+    @Test
+    public void shouldGetBooks() {
+        // GIVEN
+        BookDetails bookDetails = new BookDetails(SAMPLE_BOOK_NAME, null, null);
+        List<Book> bookList = List.of(
+                buildMockBook(SAMPLE_BOOK_NAME, SAMPLE_AUTHOR, SAMPLE_RELEASE_DATE),
+                buildMockBook(SAMPLE_BOOK_NAME, SAMPLE_AUTHOR_2, SAMPLE_RELEASE_DATE_2)
+        );
+
+        when(bookRepository.findAll(any(Example.class)))
+                .thenReturn(bookList);
+
+        // WHEN
+        List<Book> books = bookService.getBooks(bookDetails);
+
+        // THEN
+        assertEquals(bookList, books);
+        verify(bookRepository, times(1)).findAll(any(Example.class));
     }
 
     private Book buildMockBook(String name, String author, LocalDate releaseDate) {
