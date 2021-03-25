@@ -54,6 +54,11 @@ public class BookService {
 
         Book persistedBook = optionalBook.get();
 
+        if (persistedBook.equals(updatedBook)) {
+            // Skip updating and saving if no changes have been made
+            return updatedBook;
+        }
+
         // Only update fields with values
         if (updatedBook.getName() != null) {
             persistedBook.setName(updatedBook.getName());

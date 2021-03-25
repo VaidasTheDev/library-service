@@ -10,9 +10,11 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@EqualsAndHashCode
+@ToString
 @Table(name = "book", uniqueConstraints = { @UniqueConstraint(columnNames = {"name" , "author", "release_date"}) })
 public class Book {
 

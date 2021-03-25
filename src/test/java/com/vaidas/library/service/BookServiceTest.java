@@ -18,7 +18,7 @@ import static com.vaidas.library.model.messages.BookServiceErrorMessages.ERROR_D
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class BookServiceTest {
@@ -28,21 +28,18 @@ public class BookServiceTest {
 
     @InjectMocks BookService bookService;
 
-    private final String SAMPLE_BOOK_NAME = "Sample Book";
-    private final String SAMPLE_AUTHOR = "Sample Author";
-    private final Date SAMPLE_RELEASE_DATE = new Date();
+    private final static String SAMPLE_BOOK_NAME = "Sample Book";
+    private final static String SAMPLE_BOOK_NAME_2 = "Another Book";
+    private final static String SAMPLE_AUTHOR = "Sample Author";
+    private final static String SAMPLE_AUTHOR_2 = "Another Author";
+    private final static Date SAMPLE_RELEASE_DATE = new Date();
+    private final static Date SAMPLE_RELEASE_DATE_2 = new Date(System.currentTimeMillis() - 60000 * 60 * 24);
 
     @Test
     public void shouldAddBook() {
         // GIVEN
         BookDetails bookDetails = new BookDetails(SAMPLE_BOOK_NAME, SAMPLE_AUTHOR, SAMPLE_RELEASE_DATE);
-        Book mockBook = new Book(
-                UUID.randomUUID(),
-                SAMPLE_BOOK_NAME,
-                SAMPLE_AUTHOR,
-                SAMPLE_RELEASE_DATE,
-                BookStatus.AVAILABLE
-        );
+        Book mockBook = buildMockBook(SAMPLE_BOOK_NAME, SAMPLE_AUTHOR, SAMPLE_RELEASE_DATE);
         when(bookRepository.save(any())).thenReturn(mockBook);
         when(bookRepository.findBookByNameAndAuthorAndReleaseDate(SAMPLE_BOOK_NAME, SAMPLE_AUTHOR, SAMPLE_RELEASE_DATE))
                 .thenReturn(Optional.empty());
@@ -52,19 +49,19 @@ public class BookServiceTest {
 
         // THEN
         assertEquals(mockBook, book);
+        verify(bookRepository, times(1)).findBookByNameAndAuthorAndReleaseDate(
+                SAMPLE_BOOK_NAME,
+                SAMPLE_AUTHOR,
+                SAMPLE_RELEASE_DATE
+        );
+        verify(bookRepository, times(1)).save(any());
     }
 
     @Test
     public void shouldNotAddDuplicateBooks() {
         // GIVEN
         BookDetails bookDetails = new BookDetails(SAMPLE_BOOK_NAME, SAMPLE_AUTHOR, SAMPLE_RELEASE_DATE);
-        Book mockBook = new Book(
-                UUID.randomUUID(),
-                SAMPLE_BOOK_NAME,
-                SAMPLE_AUTHOR,
-                SAMPLE_RELEASE_DATE,
-                BookStatus.AVAILABLE
-        );
+        Book mockBook = buildMockBook(SAMPLE_BOOK_NAME, SAMPLE_AUTHOR, SAMPLE_RELEASE_DATE);
         when(bookRepository.findBookByNameAndAuthorAndReleaseDate(SAMPLE_BOOK_NAME, SAMPLE_AUTHOR, SAMPLE_RELEASE_DATE))
                 .thenReturn(Optional.of(mockBook));
 
@@ -75,6 +72,88 @@ public class BookServiceTest {
         } catch (RuntimeException e) {
             // THEN
             assertEquals(ERROR_DUPLICATE_BOOK, e.getMessage());
+            verify(bookRepository, times(1)).findBookByNameAndAuthorAndReleaseDate(
+                    SAMPLE_BOOK_NAME,
+                    SAMPLE_AUTHOR,
+                    SAMPLE_RELEASE_DATE
+            );
+            verify(bookRepository, times(0)).save(any());
         }
+    }
+
+    @Test
+    public void shouldEditBook() {
+        // GIVEN
+        Book mockUpdatedBook = buildMockBook(
+                SAMPLE_BOOK_NAME,
+                SAMPLE_AUTHOR,
+                SAMPLE_RELEASE_DATE
+        );
+        Book mockPersistedBook = buildMockBook(
+                mockUpdatedBook.getId(),
+                SAMPLE_BOOK_NAME_2,
+                SAMPLE_AUTHOR_2,
+                SAMPLE_RELEASE_DATE_2,
+                BookStatus.UNAVAILABLE
+        );
+        when(bookRepository.findById(mockPersistedBook.getId()))
+                .thenReturn(Optional.of(mockPersistedBook));
+        when(bookRepository.save(eq(mockUpdatedBook))).thenReturn(mockUpdatedBook);
+
+        // WHEN
+        Book book = bookService.editBook(mockUpdatedBook);
+
+        // THEN
+        assertEquals(mockUpdatedBook, book);
+        verify(bookRepository, times(1)).findById(mockUpdatedBook.getId());
+        verify(bookRepository, times(1)).save(eq(mockUpdatedBook));
+    }
+
+    @Test
+    public void shouldPartiallyEditBook() {
+        // GIVEN
+        Book mockUpdatedBook = buildMockBook(
+                SAMPLE_BOOK_NAME,
+                SAMPLE_AUTHOR_2,
+                SAMPLE_RELEASE_DATE_2
+        );
+        Book mockPersistedBook = buildMockBook(
+                mockUpdatedBook.getId(),
+                SAMPLE_BOOK_NAME_2,
+                SAMPLE_AUTHOR_2,
+                SAMPLE_RELEASE_DATE_2,
+                BookStatus.UNAVAILABLE
+        );
+        when(bookRepository.findById(mockPersistedBook.getId()))
+                .thenReturn(Optional.of(mockPersistedBook));
+        when(bookRepository.save(eq(mockUpdatedBook))).thenReturn(mockUpdatedBook);
+
+        // WHEN
+        Book book = bookService.editBook(mockUpdatedBook);
+
+        // THEN
+        assertEquals(mockUpdatedBook, book);
+        verify(bookRepository, times(1)).findById(mockUpdatedBook.getId());
+        verify(bookRepository, times(1)).save(eq(mockUpdatedBook));
+    }
+
+    private Book buildMockBook(String name, String author, Date releaseDate) {
+        return buildMockBook(
+                UUID.randomUUID(),
+                name,
+                author,
+                releaseDate,
+                BookStatus.AVAILABLE
+        );
+    }
+
+    private Book buildMockBook(UUID id, String name, String author, Date releaseDate, BookStatus bookStatus) {
+        return new Book(
+                id,
+                name,
+                author,
+                releaseDate,
+                bookStatus
+        );
     }
 }
