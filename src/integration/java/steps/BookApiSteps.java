@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -32,18 +33,24 @@ public class BookApiSteps extends SpringIntegration {
 
     @And("^provided book name is '(.+)'$")
     public void andProvidedBookNameIs(String bookName) {
-        bookDetails.setName(bookName);
+        if (!isNull(bookName)) {
+            bookDetails.setName(bookName);
+        }
     }
 
     @And("^provided book author is '(.+)'$")
     public void andProvidedBookAuthorIs(String bookAuthor) {
-        bookDetails.setAuthor(bookAuthor);
+        if (!isNull(bookAuthor)) {
+            bookDetails.setAuthor(bookAuthor);
+        }
     }
 
     @And("^provided book release date is '(.+)'$")
     public void andProvidedBookReleaseDateIs(String releaseDate) throws ParseException {
-        Date date = new SimpleDateFormat(DEFAULT_DATE_FORMAT).parse(releaseDate);
-        bookDetails.setReleaseDate(date);
+        if (!isNull(releaseDate)) {
+            Date date = new SimpleDateFormat(DEFAULT_DATE_FORMAT).parse(releaseDate);
+            bookDetails.setReleaseDate(date);
+        }
     }
 
     @When("^the client sends a request to save the book$")
@@ -73,5 +80,9 @@ public class BookApiSteps extends SpringIntegration {
     public void andAddedBookHasMatchingReleaseDate(String releaseDate) throws ParseException {
         Date expectedDate = simpleDateFormat.parse(releaseDate);
         assertEquals(expectedDate, lastResponseBody.getReleaseDate());
+    }
+    
+    private boolean isNull(String s) {
+        return "null".equals(s.toLowerCase(Locale.ROOT));
     }
 }
