@@ -12,7 +12,7 @@ public class BookValidationMessages {
     public static final String NAME_TOO_SHORT = "Book name must have at least 1 character";
 
     public static final String AUTHOR_EMPTY = "Author is required";
-    public static final String AUTHOR_TOO_SHORT = "Book name must have at least 1 character";
+    public static final String AUTHOR_TOO_SHORT = "Author must have at least 1 character";
 
     public static final String RELEASE_DATE_NULL = "Release date is required";
 }
